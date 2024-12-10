@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase SMS Viewer</title>
+    <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.1/firebase-database.js"></script>
+</head>
+<body>
+    <h1>SMS Data from Firebase</h1>
+    <div id="smsData"></div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YAIzaSyBfWWURVgujAB1g9P5Ix3PSliwHP6r8hiI",
+            authDomain: "sms-reader-9c3a1.firebaseapp.com",
+            databaseURL: "https://sms-reader-9c3a1-default-rtdb.firebaseio.com",
+            projectId: "sms-reader-9c3a1",
+            storageBucket: "sms-reader-9c3a1.firebasestorage.app",
+            messagingSenderId: "315506311872",
+            appId: "1:315506311872:web:189582ba1302b5a801a325"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database(app);
+
+        // Reference to the "SMS" node
+        const smsRef = database.ref("SMS");
+
+        // Fetch data and display it
+        smsRef.on("value", (snapshot) => {
+            const data = snapshot.val();
+            const smsContainer = document.getElementById("smsData");
+            smsContainer.innerHTML = "";
+
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const sms = data[key];
+                    smsContainer.innerHTML += `<p><strong>From:</strong> ${sms.address} <br> <strong>Message:</strong> ${sms.body} <br> <strong>Date:</strong> ${sms.date}</p>`;
+                });
+            } else {
+                smsContainer.innerHTML = "<p>No SMS data available.</p>";
+            }
+        });
+    </script>
+</body>
+</html>
